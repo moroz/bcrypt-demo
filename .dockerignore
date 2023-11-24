@@ -1,0 +1,6 @@
+node_modules
+docker-compose.yml
+Makefile
+modd.conf
+.tool-versions
+**/*_templ.go
