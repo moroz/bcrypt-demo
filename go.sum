@@ -5,3 +5,5 @@ github.com/lib/pq v1.2.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/mattn/go-sqlite3 v1.14.6/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
+github.com/moroz/uuidv7-go v0.0.0-20231119172155-c5c58f21b418 h1:0QYDvjyw0/AWHdYogy0GYZdKpcEfjLljCyWZSFwfmas=
+github.com/moroz/uuidv7-go v0.0.0-20231119172155-c5c58f21b418/go.mod h1:0cGZgZwmxB9ZQecz2No09lUbG/TvmFy0TbAcjxgXt88=
