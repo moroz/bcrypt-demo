@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
+	"github.com/alexedwards/argon2id"
 	"github.com/jmoiron/sqlx"
 	"github.com/moroz/uuidv7-go"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -19,6 +19,14 @@ type User struct {
 
 const USER_COLUMNS = "id, email, password_hash, inserted_at, updated_at"
 
+var ARGON2_PARAMS = argon2id.Params{
+	Memory:      46 * 1024, // 46 MiB
+	Iterations:  1,
+	Parallelism: 1,
+	SaltLength:  16,
+	KeyLength:   16,
+}
+
 func CreateUser(db *sqlx.DB, email, password, passwordConfirmation string) (*User, error) {
 	if email == "" {
 		return nil, errors.New("Email cannot be blank!")
@@ -29,7 +37,7 @@ func CreateUser(db *sqlx.DB, email, password, passwordConfirmation string) (*Use
 	if password != passwordConfirmation {
 		return nil, errors.New("Passwords do not match!")
 	}
-	digest, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	digest, err := argon2id.CreateHash(password, &ARGON2_PARAMS)
 	if err != nil {
 		return nil, err
 	}
@@ -48,9 +56,12 @@ func AuthenticateUserByEmailPassword(db *sqlx.DB, email, password string) (*User
 		return nil, err
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(result.PasswordHash), []byte(password))
+	match, err := argon2id.ComparePasswordAndHash(password, result.PasswordHash)
 	if err != nil {
 		return nil, err
+	}
+	if !match {
+		return nil, errors.New("Invalid password")
 	}
 
 	return &result, nil
