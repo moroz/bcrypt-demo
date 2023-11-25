@@ -1,4 +1,4 @@
-module github.com/moroz/bcrypt-demo
+module github.com/moroz/password-demo
 
 go 1.21.4
 

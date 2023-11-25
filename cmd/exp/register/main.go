@@ -6,8 +6,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/moroz/bcrypt-demo/config"
-	"github.com/moroz/bcrypt-demo/models"
+	"github.com/moroz/password-demo/config"
+	"github.com/moroz/password-demo/models"
 )
 
 func main() {
