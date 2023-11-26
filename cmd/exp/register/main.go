@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -13,15 +14,18 @@ import (
 func main() {
 	db := sqlx.MustConnect("postgres", config.DATABASE_URL)
 
-	var email, password, passwordConfirmation string
+	var email, password, confirmation string
 	fmt.Print("Email: ")
 	fmt.Scanln(&email)
 	fmt.Print("Password: ")
 	fmt.Scanln(&password)
 	fmt.Print("Confirm password: ")
-	fmt.Scanln(&passwordConfirmation)
+	fmt.Scanln(&confirmation)
 
-	user, err := models.CreateUser(db, email, password, passwordConfirmation)
+	// 刪除前後的空白字符
+	email = strings.TrimSpace(email)
+
+	user, err := models.CreateUser(db, email, password, confirmation)
 	if err != nil {
 		log.Println(err)
 	} else {

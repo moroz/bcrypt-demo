@@ -68,18 +68,30 @@ func CreateUser(db *sqlx.DB, email, password, passwordConfirmation string) (*Use
 
 func AuthenticateUserByEmailPassword(db *sqlx.DB, email, password string) (*User, error) {
 	result := User{}
-	err := db.Get(&result, "select "+USER_COLUMNS+" from users where password_hash is not null and email = $1", email)
+	err := db.Get(
+		&result,
+		// 搜尋有設定密碼，對應所輸入電子信箱之使用者
+		"select "+USER_COLUMNS+" from users where password_hash is not null and email=$1",
+		// 為 SQL 語法中的佔位符 $1 提供值：信箱
+		email,
+	)
+	// 若查詢時發生錯誤，如：使用者不存在，連接失敗等，則放棄登入
 	if err != nil {
 		return nil, err
 	}
 
+	// 檢查密碼是否與當初所輸入的相符
 	match, err := argon2id.ComparePasswordAndHash(password, result.PasswordHash)
+	// 若檢查時發生錯誤，如：資料庫裡面儲存的密碼字串格式不正確等，則放棄登入
 	if err != nil {
 		return nil, err
 	}
+
+	// 成功檢查密碼，結果為不相符：拒絕登入
 	if !match {
 		return nil, errors.New("Invalid password")
 	}
 
+	// 成功登入：返回使用者資料
 	return &result, nil
 }
